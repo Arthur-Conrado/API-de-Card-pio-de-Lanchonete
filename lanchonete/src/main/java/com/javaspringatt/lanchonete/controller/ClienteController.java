@@ -24,7 +24,7 @@ public ResponseEntity<List<ModelCliente>> listarTodos(){
         return ResponseEntity.ok(clientes);
     }  
 
-@GetMapping("/api/clientes/{id}")
+@GetMapping("/{id}")
 public ResponseEntity<ModelCliente> buscarPorId(@PathVariable int id ){
     ModelCliente cliente = attClienteService.buscarPorId(id);
      if(cliente!=null){
