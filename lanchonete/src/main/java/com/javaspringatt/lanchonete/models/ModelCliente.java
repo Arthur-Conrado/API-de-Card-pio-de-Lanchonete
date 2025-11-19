@@ -13,7 +13,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Entity
-@Table(name = "Cliente")
+@Table(name = "cliente")
 @Getter
 @Setter
 public class ModelCliente {
@@ -21,10 +21,13 @@ public class ModelCliente {
 @GeneratedValue(strategy = GenerationType.IDENTITY)
 private int id;
 @Column(nullable = false,length=100)
-private String nome;
+private String nomeCompleto;
 
-@Column(nullable = false,length=100)
+@Column(nullable = false,length=100, unique = true)
 private String email;
+
+@Column(length=20)
+private String telefone;
 
 @Column(nullable = false,length=100)
 private String endereco;
@@ -33,34 +36,34 @@ private String endereco;
 private LocalDateTime dataCadastro;
 
 @Column(nullable = false)
-private boolean ativo ;
+private boolean ativo = true;
 
-@Column(nullable = false,length=100)
+@Column(length=200)
 private String preferencias;
 
-@Column(nullable = false,length=100)
+@Column(length=200)
 private String historicoCompras;
 
-@Column(nullable = false,length=100)
+@Column(nullable = false,length=14, unique = true)
 private String cpf;
 
-@Column(nullable = false,length=100)
+@Column(length=100)
 private String pedidos;
 
 public ModelCliente(){
 
 }
-public ModelCliente(int id, String nome,String email,String endereco, LocalDateTime dataCadastro, boolean ativo, String preferencias, String historicoCompras, String cpf, String pedidos){
-
-    this.id = id;
-    this.nome=nome;
-    this.email=email;
-    this.endereco=endereco;
-    this.dataCadastro=dataCadastro;
-    this.ativo=ativo;
-    this.preferencias=preferencias;
-    this.historicoCompras=historicoCompras;
-    this.cpf=cpf;
-    this.pedidos=pedidos;
-}
+public ModelCliente(int id, String nomeCompleto, String email, String telefone, String endereco, boolean ativo, String preferencias, String historicoCompras, String cpf, String pedidos) {
+        this.id = id;
+        this.nomeCompleto = nomeCompleto;
+        this.email = email;
+        this.telefone = telefone;
+        this.endereco = endereco;
+        this.ativo = ativo;
+        this.preferencias = preferencias;
+        this.historicoCompras = historicoCompras;
+        this.cpf = cpf;
+        this.pedidos = pedidos;
+        
+    }
 }

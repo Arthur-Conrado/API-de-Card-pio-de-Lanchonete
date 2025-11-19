@@ -42,7 +42,7 @@ public class AttService {
             cardapio.setNome(cardapioatualizado.getNome());
             cardapio.setPreco(cardapioatualizado.getPreco());
             cardapio.setDescricao(cardapioatualizado.getDescricao());
-            cardapio.setCategoria(cardapio.getCategoria());
+            cardapio.setCategoria(cardapioatualizado.getCategoria());
             cardapio.setTempoDePreparo(cardapioatualizado.getTempoDePreparo());
             return attRepository.save(cardapio);
         }
