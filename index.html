@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastro de Produto (POST)</title>
+</head>
+<body>
+    <header>
+        <a href="./index.html">Cadastro de Produto</a>
+        <a href="./produtos.html">Listagem de Produtos</a>
+        </header>
+
+    <h1>Cadastro de Produto</h1>
+
+    <form id="pd_form">
+        <label for="pd_nome">Nome:</label>
+        <input id="pd_nome" name="nome" type="text" placeholder="Nome do produto..." required>
+        <br>
+        <label for="pd_descricao">Descrição:</label>
+        <input id="pd_descricao" name="descricao" type="text" placeholder="Descrição do produto..." required>
+        <br>
+        <label for="pd_preco">Preço:</label>
+        <input id="pd_preco" name="preco" type="number" step="0.01" placeholder="0.00" required>
+        <br>
+        <label for="pd_tempoPreparo">Tempo de Preparo:</label>
+        <input id="pd_tempoPreparo" name="tempoDisponivel" type="text" placeholder="Ex: 30 minutos" required>
+        <br>
+        <label for="pd_disponivel">Disponível para venda:</label>
+        <input id="pd_disponivel" name="disponivel" type="checkbox">
+        <br>
+
+        <button type="submit">Cadastrar Produto</button>
+    </form>
+    
+    <div id="pd_resultado">
+        </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
