@@ -1,0 +1,247 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: automated-fix <fix@local>
+Date: Fri, 05 Dec 2025 00:00:00 +0000
+Subject: [PATCH] Corrige serviços e repositórios de Pedido
+
+---
+ lanchonete/src/main/java/com/javaspringatt/lanchonete/controller/AttPedidoController.java | 51 ++++++++++++++++++++++++++------------
+ lanchonete/src/main/java/com/javaspringatt/lanchonete/controller/AttPedidoRepository.java | 46 ----
+ lanchonete/src/main/java/com/javaspringatt/lanchonete/services/AttPedidoService.java | 41 ++++++++++++++++++++++++++---
+ lanchonete/src/main/java/com/javaspringatt/lanchonete/repository/AttEnderecoRepository.java | 22 ++++++++++++++
+ lanchonete/src/main/java/com/javaspringatt/lanchonete/repository/AttFuncionarioRepository.java | 22 ++++++++++++++
+ lanchonete/src/main/java/com/javaspringatt/lanchonete/repository/AttItemPedidoRepository.java | 22 ++++++++++++++
+ lanchonete/src/main/java/com/javaspringatt/lanchonete/repository/AttPedidoRepository.java | 22 ++++++++++++++
+ 7 files changed, 139 insertions(+), 87 deletions(-)
+ delete mode 100644 lanchonete/src/main/java/com/javaspringatt/lanchonete/controller/AttPedidoRepository.java
+diff --git a/lanchonete/src/main/java/com/javaspringatt/lanchonete/controller/AttPedidoController.java b/lanchonete/src/main/java/com/javaspringatt/lanchonete/controller/AttPedidoController.java
+index 0000000..1111111 100644
+--- a/lanchonete/src/main/java/com/javaspringatt/lanchonete/controller/AttPedidoController.java
++++ b/lanchonete/src/main/java/com/javaspringatt/lanchonete/controller/AttPedidoController.java
+@@ -1,51 +1,51 @@
+-package com.javaspringatt.lanchonete.services;
+-
+-import org.springframework.stereotype.Service;
+-import java.util.List;
+-import com.javaspringatt.lanchonete.repository.AttPedidoRepository;
+-import com.javaspringatt.lanchonete.models.AttPedidoModel;
+-
+-@Service
+-public class AttPedidoService {
+-
+-  private final AttPedidoRepository repository;
+-
+-  public AttPedidoService(AttPedidoRepository repository) {
+-    this.repository = repository;
+-  }
+-
+-  public AttPedidoModel criarPedido(AttPedidoModel pedido) {
+-    return repository.save(pedido);
+-  }
+-
+-  public List<AttPedidoModel> listar() {
+-    return repository.findAll();
+-  }
+-
+-  public AttPedidoModel buscar(Long id) {
+-    return repository.findById(id).orElse(null);
+-  }
+-}
++package com.javaspringatt.lanchonete.controller;
++import com.javaspringatt.lanchonete.models.AttPedidoModel;
++import com.javaspringatt.lanchonete.services.AttPedidoService;
++import org.springframework.web.bind.annotation.*;
++import java.util.List;
++
++@RestController
++@RequestMapping("/pedidos")
++public class AttPedidoController {
++
++  private final AttPedidoService service;
++
++  public AttPedidoController(AttPedidoService service) {
++    this.service = service;
++  }
++
++  @PostMapping
++  public AttPedidoModel criarPedido(@RequestBody AttPedidoModel pedido) {
++    return service.criarPedido(pedido);
++  }
++
++  @GetMapping
++  public List<AttPedidoModel> listar() {
++    return service.listar();
++  }
++
++  @GetMapping("/{id}")
++  public AttPedidoModel buscar(@PathVariable Long id) {
++    return service.buscar(id);
++  }
++}
+diff --git a/lanchonete/src/main/java/com/javaspringatt/lanchonete/controller/AttPedidoRepository.java b/lanchonete/src/main/java/com/javaspringatt/lanchonete/controller/AttPedidoRepository.java
+deleted file mode 100644
+index 2222222..0000000
+--- a/lanchonete/src/main/java/com/javaspringatt/lanchonete/controller/AttPedidoRepository.java
++++ /dev/null
+@@ -1,46 +0,0 @@
+-package com.javaspringatt.lanchonete.services;
+-
+-import org.springframework.stereotype.Service;
+-import java.util.List;
+-import com.javaspringatt.lanchonete.repository.AttPedidoRepository;
+-import com.javaspringatt.lanchonete.models.AttPedidoModel;
+-
+-@Service
+-public class AttPedidoService {
+-
+-    private final AttPedidoRepository attPedidoRepository;
+-
+-    public AttPedidoService(AttPedidoRepository attPedidoRepository) {
+-        this.attPedidoRepository = attPedidoRepository;
+-    }
+-
+-    public List<AttPedidoModel> findAll() {
+-        return attPedidoRepository.findAll();
+-    }
+-
+-    public AttPedidoModel findById(Long id) {
+-        return attPedidoRepository.findById(id).orElse(null);
+-    }
+-
+-    public AttPedidoModel save(AttPedidoModel attPedido) {
+-        return attPedidoRepository.save(attPedido);
+-    }
+-
+-    public void deleteById(Long id) {
+-        attPedidoRepository.deleteById(id);
+-    }
+-}
+diff --git a/lanchonete/src/main/java/com/javaspringatt/lanchonete/services/AttPedidoService.java b/lanchonete/src/main/java/com/javaspringatt/lanchonete/services/AttPedidoService.java
+index 3333333..4444444 100644
+--- a/lanchonete/src/main/java/com/javaspringatt/lanchonete/services/AttPedidoService.java
++++ b/lanchonete/src/main/java/com/javaspringatt/lanchonete/services/AttPedidoService.java
+@@ -1,41 +1,41 @@
+-package com.javaspringatt.lanchonete.services;
+-
+-@Service
+-public class AttPedidoService {
+-
+-  private final AttPedidoRepository repo;
+-
+-  public AttPedidoService(AttPedidoRepository repo) {
+-    this.repo = repo;
+-  }
+-
+-  public AttPedidoModel criarPedido(AttPedidoModel pedido) {
+-    return repo.save(pedido);
+-  }
+-
+-  public List<AttPedidoModel> listar() {
+-    return repo.findAll();
+-  }
+-
+-  public AttPedidoModel buscar(Long id) {
+-    return repo.findById(id).orElse(null);
+-  }
+-}
++package com.javaspringatt.lanchonete.services;
++
++import org.springframework.stereotype.Service;
++import java.util.List;
++import com.javaspringatt.lanchonete.repository.AttPedidoRepository;
++import com.javaspringatt.lanchonete.models.AttPedidoModel;
++
++@Service
++public class AttPedidoService {
++
++  private final AttPedidoRepository repo;
++
++  public AttPedidoService(AttPedidoRepository repo) {
++    this.repo = repo;
++  }
++
++  public AttPedidoModel criarPedido(AttPedidoModel pedido) {
++    return repo.save(pedido);
++  }
++
++  public List<AttPedidoModel> listar() {
++    return repo.findAll();
++  }
++
++  public AttPedidoModel buscar(Long id) {
++    return repo.findById(id).orElse(null);
++  }
++}
+diff --git a/lanchonete/src/main/java/com/javaspringatt/lanchonete/repository/AttEnderecoRepository.java b/lanchonete/src/main/java/com/javaspringatt/lanchonete/repository/AttEnderecoRepository.java
+index 5555555..6666666 100644
+--- a/lanchonete/src/main/java/com/javaspringatt/lanchonete/repository/AttEnderecoRepository.java
++++ b/lanchonete/src/main/java/com/javaspringatt/lanchonete/repository/AttEnderecoRepository.java
+@@ -1,7 +1,22 @@
+-package com.javaspringatt.lanchonete.repository;
+-
+-public class AttEnderecoRepository {
+-    
+-}
++package com.javaspringatt.lanchonete.repository;
++
++import org.springframework.data.jpa.repository.JpaRepository;
++import com.javaspringatt.lanchonete.models.AttEnderecoModel;
++
++public interface AttEnderecoRepository extends JpaRepository<AttEnderecoModel, Long> {
++}
++
+diff --git a/lanchonete/src/main/java/com/javaspringatt/lanchonete/repository/AttFuncionarioRepository.java b/lanchonete/src/main/java/com/javaspringatt/lanchonete/repository/AttFuncionarioRepository.java
+index 7777777..8888888 100644
+--- a/lanchonete/src/main/java/com/javaspringatt/lanchonete/repository/AttFuncionarioRepository.java
++++ b/lanchonete/src/main/java/com/javaspringatt/lanchonete/repository/AttFuncionarioRepository.java
+@@ -1,7 +1,22 @@
+-package com.javaspringatt.lanchonete.repository;
+-
+-public class AttFuncionarioRepository {
+-    
+-}
++package com.javaspringatt.lanchonete.repository;
++
++import org.springframework.data.jpa.repository.JpaRepository;
++import com.javaspringatt.lanchonete.models.AttFuncionariosModel;
++
++public interface AttFuncionarioRepository extends JpaRepository<AttFuncionariosModel, Long> {
++}
++
+diff --git a/lanchonete/src/main/java/com/javaspringatt/lanchonete/repository/AttItemPedidoRepository.java b/lanchonete/src/main/java/com/javaspringatt/lanchonete/repository/AttItemPedidoRepository.java
+index 9999999..aaaaaaaa 100644
+--- a/lanchonete/src/main/java/com/javaspringatt/lanchonete/repository/AttItemPedidoRepository.java
++++ b/lanchonete/src/main/java/com/javaspringatt/lanchonete/repository/AttItemPedidoRepository.java
+@@ -1,7 +1,22 @@
+-package com.javaspringatt.lanchonete.repository;
+-
+-public class AttItemPedidoRepository {
+-    
+-}
++package com.javaspringatt.lanchonete.repository;
++
++import org.springframework.data.jpa.repository.JpaRepository;
++import com.javaspringatt.lanchonete.models.AttItemPedidoModel;
++
++public interface AttItemPedidoRepository extends JpaRepository<AttItemPedidoModel, Long> {
++}
++
+diff --git a/lanchonete/src/main/java/com/javaspringatt/lanchonete/repository/AttPedidoRepository.java b/lanchonete/src/main/java/com/javaspringatt/lanchonete/repository/AttPedidoRepository.java
+index bbbbbbb..ccccccc 100644
+--- a/lanchonete/src/main/java/com/javaspringatt/lanchonete/repository/AttPedidoRepository.java
++++ b/lanchonete/src/main/java/com/javaspringatt/lanchonete/repository/AttPedidoRepository.java
+@@ -1,7 +1,22 @@
+-package com.javaspringatt.lanchonete.repository;
+-
+-public class AttPedidoRepository {
+-    
+-}
++package com.javaspringatt.lanchonete.repository;
++
++import org.springframework.data.jpa.repository.JpaRepository;
++import com.javaspringatt.lanchonete.models.AttPedidoModel;
++
++public interface AttPedidoRepository extends JpaRepository<AttPedidoModel, Long> {
++}
++
+-- 
+2.46.0
